@@ -48,3 +48,12 @@ class PortfolioTestCase(TestCase):
             {'username': 'admin_gal', 'password': 'admin_gal'}), content_type='application/json')
         current_data = json.loads(response.content)
         self.assertTrue(current_data[0]['fields']['username'], 'admin_gal')
+
+    def test_change_email_user(self):
+        user_model = User.objects.create_user(username='test', password='pass', first_name='test', last_name='test',
+                                              email='email')
+        response = self.client.post('/gallery/changeEmail/', json.dumps(
+            {'username': 'test', 'email': 'emailNuevo'}), content_type='application/json')
+        current_data = json.loads(response.content)
+        print(current_data)
+        self.assertTrue(current_data[0]['fields']['email'], 'emailNuevo')
