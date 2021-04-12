@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -29,3 +30,16 @@ def add_user_view(request):
         user_model.email = email
         user_model.save()
     return HttpResponse(serializers.serialize('json', [user_model]))
+
+@csrf_exempt
+def login_user_view(request):
+    if request.method == 'POST':
+        json_user = json.loads(request.body)
+        username = json_user['username']
+        password = json_user['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            user.save()
+    return HttpResponse(serializers.serialize('json', [user]))
