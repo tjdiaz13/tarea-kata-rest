@@ -27,3 +27,13 @@ class PortfolioTestCase(TestCase):
              'email': 'prueba@gmail.com'}), content_type='application/json')
         current_data = json.loads(response.content)
         self.assertEqual(current_data[0]['fields']['username'], 'testUser')
+
+    def test_verify_public_data_portfolio(self):
+        user_model = User.objects.create_user(username='test', password='pass', first_name='test', last_name='test',
+                                              email='email')
+
+        Portfolio.objects.create(product='test', user=user_model, public=False)
+
+        response = self.client.get('/gallery/')
+        current_data = json.loads(response.content)
+        self.assertEqual(current_data[0]['fields']['public'], True)
