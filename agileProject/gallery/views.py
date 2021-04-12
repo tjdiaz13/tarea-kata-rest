@@ -43,3 +43,14 @@ def login_user_view(request):
             login(request, user)
             user.save()
     return HttpResponse(serializers.serialize('json', [user]))
+
+@csrf_exempt
+def change_email_user(request):
+    if request.method == 'POST':
+        json_user = json.loads(request.body)
+        username = json_user['username']
+        email = json_user['email']
+        u = User.objects.get(username=username)
+        u.email = email
+        u.save()
+    return HttpResponse(serializers.serialize('json', [u]))
