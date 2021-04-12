@@ -37,3 +37,14 @@ class PortfolioTestCase(TestCase):
         response = self.client.get('/gallery/')
         current_data = json.loads(response.content)
         self.assertEqual(current_data[0]['fields']['public'], True)
+
+    def test_login_user(self):
+        user = User.objects.create(username='admin_gal', password='admin_gal', is_active=True, is_staff=True,
+                                   is_superuser=True)
+        user.set_password('admin_gal')
+        user.save()
+
+        response = self.client.post('/gallery/loginUser/', json.dumps(
+            {'username': 'admin_gal', 'password': 'admin_gal'}), content_type='application/json')
+        current_data = json.loads(response.content)
+        self.assertTrue(current_data[0]['fields']['username'], 'admin_gal')
